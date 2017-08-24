@@ -24,7 +24,7 @@ var allValues: [TOHLC] = []
 // Create a new router
 let router = Router()
 
-// Handle HTTP GET requests to /
+// Handle HTTP GET requests to /data
 router.get("/data") {
 	request, response, next in
 	var data: [String: Any] = [:]
@@ -50,6 +50,7 @@ router.get("/data") {
 	response.send(json: data)
 }
 
+// Handle HTTP GET requests to everything else
 router.get("*") {
 	request, response, next in
 	response.statusCode = .forbidden
