@@ -71,12 +71,14 @@ router.get("/data") {
 		]
 	}
 
+	response.headers.append("Cache-Control", value: "max-age=120")
 	response.send(json: data)
 }
 
 // Handle HTTP GET requests to everything else
 router.get("*") {
 	request, response, next in
+	response.headers.append("Cache-Control", value: "max-age=120")
 	response.statusCode = .forbidden
 	response.send(json: [ "message" : "Nope, go away." ])
 	next()
