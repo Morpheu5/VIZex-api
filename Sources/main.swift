@@ -2,6 +2,12 @@ import Foundation
 import Kitura
 import CSV
 
+import HeliumLogger
+import LoggerAPI
+let logger = HeliumLogger()
+logger.colored = true
+Log.logger = logger
+
 struct TOHLC {
 	var timestamp: Int
 	var open: Double
@@ -20,6 +26,24 @@ struct TOHLC {
 
 // Super-important memory storage thing
 var allValues: [TOHLC] = []
+
+func startup() {
+	let filename = ProcessInfo.processInfo.environment["VIZEX_API_DATA_FILENAME"] ?? "/Users/morpheu5/web/vizex/api/data/ohlc.csv"
+
+	Log.info("Loading data from \"\(filename)\"")
+
+	let stream = InputStream(fileAtPath: filename)!
+	if let csv = try? CSVReader(stream: stream, hasHeaderRow: true) {
+		while let row = csv.next() {
+			allValues.append(TOHLC(timestamp: Int(row[0])!, values: row[1...4].map { Double($0)! }))
+		}
+	} else {
+		Log.error("Could not find the data file.")
+		Kitura.stop()
+	}
+
+	Log.info("Data loaded.")
+}
 
 // Create a new router
 let router = Router()
@@ -58,17 +82,11 @@ router.get("*") {
 	next()
 }
 
+// Initialize the data!
+startup()
+
 // Add an HTTP server and connect it to the router
-Kitura.addHTTPServer(onPort: 8080, with: router).started {
-	let filename = ProcessInfo.processInfo.environment["VIZEX_API_DATA_FILENAME"] ?? "/Users/morpheu5/web/vizex/data/ohlc.csv"
-
-	let stream = InputStream(fileAtPath: filename)!
-	let csv = try? CSVReader(stream: stream, hasHeaderRow: true)
-
-	while let row = csv?.next() {
-		allValues.append(TOHLC(timestamp: Int(row[0])!, values: row[1...4].map { Double($0)! }))
-	}
-}
+Kitura.addHTTPServer(onPort: 8080, with: router)
 
 // Start the Kitura runloop (this call never returns)
 Kitura.run()
