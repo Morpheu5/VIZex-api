@@ -2,46 +2,58 @@
   "autoPin": true,
   "pins": [
     {
-      "package": "COpenSSL",
+      "package": "CCurl",
       "reason": null,
-      "repositoryURL": "https://github.com/PerfectlySoft/Perfect-COpenSSL.git",
-      "version": "2.0.5"
+      "repositoryURL": "https://github.com/IBM-Swift/CCurl.git",
+      "version": "0.4.0"
     },
     {
-      "package": "PerfectCrypto",
+      "package": "CSV",
       "reason": null,
-      "repositoryURL": "https://github.com/PerfectlySoft/Perfect-Crypto.git",
-      "version": "1.0.9"
+      "repositoryURL": "https://github.com/yaslab/CSV.swift.git",
+      "version": "2.0.1"
     },
     {
-      "package": "PerfectHTTP",
+      "package": "Kitura",
       "reason": null,
-      "repositoryURL": "https://github.com/PerfectlySoft/Perfect-HTTP.git",
-      "version": "2.2.4"
+      "repositoryURL": "https://github.com/IBM-Swift/Kitura.git",
+      "version": "1.7.8"
     },
     {
-      "package": "PerfectHTTPServer",
+      "package": "Kitura-TemplateEngine",
       "reason": null,
-      "repositoryURL": "https://github.com/PerfectlySoft/Perfect-HTTPServer.git",
-      "version": "2.3.2"
+      "repositoryURL": "https://github.com/IBM-Swift/Kitura-TemplateEngine.git",
+      "version": "1.7.1"
     },
     {
-      "package": "PerfectLib",
+      "package": "Kitura-net",
       "reason": null,
-      "repositoryURL": "https://github.com/PerfectlySoft/PerfectLib.git",
-      "version": "2.0.11"
+      "repositoryURL": "https://github.com/IBM-Swift/Kitura-net.git",
+      "version": "1.7.15"
     },
     {
-      "package": "PerfectNet",
+      "package": "LoggerAPI",
       "reason": null,
-      "repositoryURL": "https://github.com/PerfectlySoft/Perfect-Net.git",
-      "version": "2.1.18"
+      "repositoryURL": "https://github.com/IBM-Swift/LoggerAPI.git",
+      "version": "1.7.0"
     },
     {
-      "package": "PerfectThread",
+      "package": "SSLService",
       "reason": null,
-      "repositoryURL": "https://github.com/PerfectlySoft/Perfect-Thread.git",
-      "version": "2.0.12"
+      "repositoryURL": "https://github.com/IBM-Swift/BlueSSLService.git",
+      "version": "0.12.48"
+    },
+    {
+      "package": "Socket",
+      "reason": null,
+      "repositoryURL": "https://github.com/IBM-Swift/BlueSocket.git",
+      "version": "0.12.61"
+    },
+    {
+      "package": "SwiftyJSON",
+      "reason": null,
+      "repositoryURL": "https://github.com/IBM-Swift/SwiftyJSON.git",
+      "version": "16.0.1"
     }
   ],
   "version": 1

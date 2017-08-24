@@ -1,30 +1,73 @@
-import PerfectLib
-import PerfectHTTP
-import PerfectHTTPServer
- 
-// Create HTTP server.
-let server = HTTPServer()
- 
-// Register your own routes and handlers
-var routes = Routes()
-routes.add(method: .get, uri: "/", handler: {
-        request, response in
-        let dictionary = ["aKey": "aValue", "anotherKey": "anotherValue"]
-        response.setHeader(.contentType, value: "application/json")
-        response.appendBody(string: try! dictionary.jsonEncodedString())
-        response.completed()
-    }
-)
- 
-// Add the routes to the server.
-server.addRoutes(routes)
- 
-// Set a listen port of 8181
-server.serverPort = 8181
- 
-do {
-    // Launch the HTTP server.
-    try server.start()
-} catch PerfectError.networkError(let err, let msg) {
-    print("Network error thrown: \(err) \(msg)")
+import Foundation
+import Kitura
+import CSV
+
+struct TOHLC {
+	var timestamp: Int
+	var open: Double
+	var high: Double
+	var low: Double
+	var close: Double
+
+	init(timestamp: Int, values: [Double]) {
+		self.timestamp = timestamp;
+		open = values[0]
+		high = values[1]
+		low = values[2]
+		close = values[3]
+	}
 }
+
+// Super-important memory storage thing
+var allValues: [TOHLC] = []
+
+// Create a new router
+let router = Router()
+
+// Handle HTTP GET requests to /
+router.get("/data") {
+	request, response, next in
+	var data: [String: Any] = [:]
+
+	let now = Int(Date().timeIntervalSince1970)
+	data["now"] = now
+
+	var values: [TOHLC] = allValues.filter() {
+		row in
+		return row.timestamp <= now && row.timestamp >= now-24*3600
+	}
+
+	data["values"] = values.map { row in
+		[
+		"timestamp" : row.timestamp,
+		"open" : row.open,
+		"high" : row.high,
+		"low" : row.low,
+		"close" : row.close
+		]
+	}
+
+	response.send(json: data)
+}
+
+router.get("*") {
+	request, response, next in
+	response.statusCode = .forbidden
+	response.send(json: [ "message" : "Nope, go away." ])
+	next()
+}
+
+// Add an HTTP server and connect it to the router
+Kitura.addHTTPServer(onPort: 8080, with: router).started {
+	let filename = ProcessInfo.processInfo.environment["VIZEX_API_DATA_FILENAME"] ?? "/Users/morpheu5/web/vizex/data/ohlc.csv"
+
+	let stream = InputStream(fileAtPath: filename)!
+	let csv = try? CSVReader(stream: stream, hasHeaderRow: true)
+
+	while let row = csv?.next() {
+		allValues.append(TOHLC(timestamp: Int(row[0])!, values: row[1...4].map { Double($0)! }))
+	}
+}
+
+// Start the Kitura runloop (this call never returns)
+Kitura.run()
