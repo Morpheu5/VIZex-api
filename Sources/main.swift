@@ -56,7 +56,7 @@ router.get("/data") {
 	let now = Int(Date().timeIntervalSince1970)
 	data["now"] = now
 
-	var values: [TOHLC] = allValues.filter() {
+	let values: [TOHLC] = allValues.filter() {
 		row in
 		return row.timestamp <= now && row.timestamp >= now-24*3600
 	}
@@ -70,7 +70,22 @@ router.get("/data") {
 		"close" : row.close
 		]
 	}
+	var lowestPrice: Double = 99999999.0;
+	for v in values {
+		if lowestPrice > v.low {
+			lowestPrice = v.low
+		}
+	}
+	var highestPrice: Double = -99999999.0;
+	for v in values {
+		if highestPrice < v.high {
+			highestPrice = v.high
+		}
+	}
+	data["lowest"] = lowestPrice
+	data["highest"] = highestPrice
 
+	response.headers.append("Access-Control-Allow-Origin", value: "http://localhost:8000")
 	response.headers.append("Cache-Control", value: "max-age=120")
 	response.send(json: data)
 }
