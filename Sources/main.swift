@@ -35,7 +35,9 @@ func startup() {
 	let stream = InputStream(fileAtPath: filename)!
 	if let csv = try? CSVReader(stream: stream, hasHeaderRow: true) {
 		while let row = csv.next() {
-			allValues.append(TOHLC(timestamp: Int(row[0])!, values: row[1...4].map { Double($0)! }))
+			let t = Int(row[0]) ?? -1;
+			let v = row[1...4].map { Double($0.trimmingCharacters(in: .whitespaces)) ?? -1.0 }
+			allValues.append(TOHLC(timestamp: t, values: v))
 		}
 	} else {
 		Log.error("Could not find the data file.")
