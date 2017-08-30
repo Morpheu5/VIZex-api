@@ -55,12 +55,14 @@ router.get("/data") {
 	request, response, next in
 	var data: [String: Any] = [:]
 
+	let n = max(1, min(Int(request.queryParameters["n"] ?? "48")!, 48))
+
 	let now = Int(Date().timeIntervalSince1970)
 	data["now"] = now
 
 	let values: [TOHLC] = allValues.filter() {
 		row in
-		return row.timestamp <= now && row.timestamp >= now-24*3600
+		return row.timestamp <= now && row.timestamp >= now-n*3600
 	}
 
 	data["values"] = values.map { row in
