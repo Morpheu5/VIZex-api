@@ -8,6 +8,7 @@ let logger = HeliumLogger()
 logger.colored = true
 Log.logger = logger
 
+// If I were a rich man, I could use a tuple here.
 struct TOHLC {
 	var timestamp: Int
 	var open: Double
@@ -24,10 +25,12 @@ struct TOHLC {
 	}
 }
 
-// Super-important memory storage thing
+// Super-important memory storage thing.
+// Kids, don't do global variables...
 var allValues: [TOHLC] = []
 
 func startup() {
+	// If only there was a better way of doing this...
 	let filename = ProcessInfo.processInfo.environment["VIZEX_API_DATA_FILENAME"] ?? "/Users/morpheu5/web/vizex/api/data/ohlc.csv"
 
 	Log.info("Loading data from \"\(filename)\"")
@@ -41,20 +44,24 @@ func startup() {
 		}
 	} else {
 		Log.error("Could not find the data file.")
+		// How rude.
 		Kitura.stop()
 	}
 
 	Log.info("Data loaded.")
 }
 
-// Create a new router
+// Create a new router.
 let router = Router()
 
-// Handle HTTP GET requests to /data
+// Handle HTTP GET requests to /data.
+// Optional param n to request a different number of values, but no more than 48
+// because 48 is a cool number.
 router.get("/data") {
 	request, response, next in
 	var data: [String: Any] = [:]
 
+	// Did I mention that 48 is a cool number?
 	let n = max(1, min(Int(request.queryParameters["n"] ?? "48")!, 48))
 
 	let now = Int(Date().timeIntervalSince1970)
@@ -62,7 +69,7 @@ router.get("/data") {
 
 	let values: [TOHLC] = allValues.filter() {
 		row in
-		return row.timestamp <= now && row.timestamp >= now-n*3600
+		row.timestamp <= now && row.timestamp >= now-n*3600
 	}
 
 	data["values"] = values.map { row in
@@ -71,33 +78,24 @@ router.get("/data") {
 		"open" : row.open,
 		"high" : row.high,
 		"low" : row.low,
-		"close" : row.close
+		"close" : row.close // I vehemently oppose trailing commas.
 		]
 	}
-	var lowestPrice: Double = 99999999.0;
-	for v in values {
-		if lowestPrice > v.low {
-			lowestPrice = v.low
-		}
-	}
-	var highestPrice: Double = -99999999.0;
-	for v in values {
-		if highestPrice < v.high {
-			highestPrice = v.high
-		}
-	}
-	data["lowest"] = lowestPrice
-	data["highest"] = highestPrice
-
+	// Swift is so cool!
+	data["lowest"] = values.map { $0.close }.min()
+	data["highest"] = values.map { $0.close }.max()
+	// Or maybe not. I mean, it's cool, but this is clunky!
 	let env = ProcessInfo.processInfo.environment["VIZEX_API_ENVIRONMENT"]
 	if env != "production" {
+		// Also, CORS sucks. I know it doesn't, but yeah, it does.
 		response.headers.append("Access-Control-Allow-Origin", value: "http://localhost:8000")
 	}
 	response.headers.append("Cache-Control", value: "max-age=120")
 	response.send(json: data)
 }
 
-// Handle HTTP GET requests to everything else
+// Handle HTTP GET requests to everything else.
+// This is pretty much me when I'll get uploaded to the matrix.
 router.get("*") {
 	request, response, next in
 	response.headers.append("Cache-Control", value: "max-age=120")
@@ -109,8 +107,10 @@ router.get("*") {
 // Initialize the data!
 startup()
 
-// Add an HTTP server and connect it to the router
+// Add an HTTP server and connect it to the router.
 Kitura.addHTTPServer(onPort: 8080, with: router)
 
-// Start the Kitura runloop (this call never returns)
+// Start the Kitura runloop (this call never returns).
+// (unless you terminate the process, in which case maybe some stack magic
+// happens, but who are we to know that?)
 Kitura.run()
