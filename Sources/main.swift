@@ -89,7 +89,9 @@ router.get("/data") {
 	data["lowest"] = lowestPrice
 	data["highest"] = highestPrice
 
-	response.headers.append("Access-Control-Allow-Origin", value: "http://localhost:8000")
+	if let env = ProcessInfo.processInfo.environment["VIZEX_API_ENVIRONMENT"], env != "production" {
+		response.headers.append("Access-Control-Allow-Origin", value: "http://localhost:8000")
+	}
 	response.headers.append("Cache-Control", value: "max-age=120")
 	response.send(json: data)
 }

@@ -10,6 +10,9 @@ EXPOSE 8080
 # Sets a reasonable default for the data filename
 ENV VIZEX_API_DATA_FILENAME="/data/ohlc.csv"
 
+# Sets the environment to "production"
+ENV VIZEX_API_ENVIRONMENT="production"
+
 # Installs and builds the application
 RUN mkdir /root/vizex-api
 COPY Package.swift Sources /root/vizex-api/
