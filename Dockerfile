@@ -8,7 +8,9 @@ USER root
 EXPOSE 8080
 
 # Sets a reasonable default for the data filename
-ENV VIZEX_API_DATA_FILENAME="/data/ohlc.csv"
+ENV VIZEX_API_DATA_FILENAME_1H="/data/ohlc_1h.csv"
+ENV VIZEX_API_DATA_FILENAME_4H="/data/ohlc_4h.csv"
+ENV VIZEX_API_DATA_FILENAME_1D="/data/ohlc_1d.csv"
 
 # Sets the environment to "production"
 ENV VIZEX_API_ENVIRONMENT="production"
