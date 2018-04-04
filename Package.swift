@@ -10,11 +10,6 @@ let package = Package(
         .package(url: "https://github.com/IBM-Swift/HeliumLogger.git", from: "1.7.1")
     ],
     targets: [
-    .target(name: "api", dependencies: [
-        "Kitura",
-        "CSV",
-        "HeliumLogger"
-        ],
-        path: "Sources")
+        .target(name: "api", dependencies: ["Kitura", "CSV", "HeliumLogger"]),
     ]
 )
