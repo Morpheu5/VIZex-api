@@ -20,6 +20,8 @@ RUN mkdir /root/vizex-api
 COPY Package.swift Sources /root/vizex-api/
 WORKDIR /root/vizex-api
 RUN swift build -c release
-COPY data/ohlc.csv /data/ohlc.csv
+COPY data/ohlc_1h.csv /data/ohlc_1h.csv
+COPY data/ohlc_4h.csv /data/ohlc_4h.csv
+COPY data/ohlc_1d.csv /data/ohlc_1d.csv
 
 CMD [ "sh", "-c", "/root/vizex-api/.build/release/api" ]
