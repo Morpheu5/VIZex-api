@@ -17,7 +17,8 @@ ENV VIZEX_API_ENVIRONMENT="production"
 
 # Installs and builds the application
 RUN mkdir /root/vizex-api
-COPY Package.swift Sources /root/vizex-api/
+COPY Package.swift /root/vizex-api/
+COPY Sources/ /root/vizex-api/Sources/
 WORKDIR /root/vizex-api
 RUN swift build -c release
 COPY data/ohlc_1h.csv /data/ohlc_1h.csv
