@@ -15,6 +15,9 @@ ENV VIZEX_API_DATA_FILENAME_1D="/data/ohlc_1d.csv"
 # Sets the environment to "production"
 ENV VIZEX_API_ENVIRONMENT="production"
 
+RUN DEBIAN_FRONTEND=noninteractive apt-get update \
+ && apt-get install -y libssl-dev libicu-dev libcurl4-openssl-dev \
+ && apt-get clean
 # Installs and builds the application
 RUN mkdir /root/vizex-api
 COPY Package.swift /root/vizex-api/

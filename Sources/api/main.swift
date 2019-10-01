@@ -48,9 +48,9 @@ func loadData(fromFile filename: String) -> [TOHLC] {
 func startup() {
 	// If only there was a better way of doing this...
     // There really should be a better way of doing this...
-    let fn_1h = ProcessInfo.processInfo.environment["VIZEX_API_DATA_FILENAME_1H"] ?? "/Users/morpheu5/web/vizex/api/data/ohlc_1h.csv"
-    let fn_4h = ProcessInfo.processInfo.environment["VIZEX_API_DATA_FILENAME_4H"] ?? "/Users/morpheu5/web/vizex/api/data/ohlc_4h.csv"
-    let fn_1d = ProcessInfo.processInfo.environment["VIZEX_API_DATA_FILENAME_1D"] ?? "/Users/morpheu5/web/vizex/api/data/ohlc_1d.csv"
+    let fn_1h = ProcessInfo.processInfo.environment["VIZEX_API_DATA_FILENAME_1H"] ?? "/Users/morpheu5/src/vizex/api/data/ohlc_1h.csv"
+    let fn_4h = ProcessInfo.processInfo.environment["VIZEX_API_DATA_FILENAME_4H"] ?? "/Users/morpheu5/src/vizex/api/data/ohlc_4h.csv"
+    let fn_1d = ProcessInfo.processInfo.environment["VIZEX_API_DATA_FILENAME_1D"] ?? "/Users/morpheu5/src/vizex/api/data/ohlc_1d.csv"
     // Perhaps one day I'll just do the squeezing here so I'll only need to provide one file at minute resolution.
     // Oh, well.
 
